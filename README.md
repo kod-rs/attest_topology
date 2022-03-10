@@ -5,7 +5,7 @@ Topological processor for the ATTEST project
 
 Topological processor is implemented as a Python package. It assumes there is a
 live PostgreSQL database running that contains CIM records. It also assumes
-that the database contains a function
+that the database contains a function:
 
 ```sql
 recordat(lastbranchid integer,
