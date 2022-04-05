@@ -30,6 +30,7 @@ def calculate_admittance_matrix(node_breaker):
     node_count = len(node_breaker.topological_nodes)
     matrix = [[0] * node_count for _ in range(node_count)]
     nodes = list(node_breaker.topological_nodes.keys())
+    processed_lines = set()
     for i, node_mrid in enumerate(nodes):
         for term_mrid in node_breaker.connectivity_map[node_mrid]:
             terminal = node_breaker.asset_map[term_mrid]
@@ -38,6 +39,9 @@ def calculate_admittance_matrix(node_breaker):
             line_seg = node_breaker.asset_map.get(line_seg_mrid)
             if not line_seg or line_seg['cimclass'] != 'cim:ACLineSegment':
                 continue
+            if line_seg_mrid in processed_lines:
+                continue
+            processed_lines.add(line_seg_mrid)
 
             x = (line_seg['cim:ACLineSegment.x']
                  or line_seg['cim:ACLineSegment.x0'])
@@ -50,7 +54,8 @@ def calculate_admittance_matrix(node_breaker):
             denominator = r ** 2 + x ** 2
             if denominator == 0:
                 continue
-            admittance = complex(r / denominator, - x / denominator)
+            admittance = (complex(r / denominator, - x / denominator)
+                          + complex(gch / 2, bch / 2))
 
             other_term_mrid = [t for t
                                in node_breaker.terminal_map[line_seg_mrid]
@@ -58,10 +63,8 @@ def calculate_admittance_matrix(node_breaker):
             other_node = connectivity_inv[other_term_mrid]
             j = nodes.index(other_node)
 
-            matrix[i][j] += admittance
-            matrix[j][i] -= admittance
-
-            matrix[i][j] += complex(gch / 2, bch / 2)
+            matrix[i][j] = admittance
+            matrix[j][i] = -admittance
     return matrix
 
 
