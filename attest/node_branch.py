@@ -54,8 +54,8 @@ def calculate_admittance_matrix(node_breaker):
             denominator = r ** 2 + x ** 2
             if denominator == 0:
                 continue
-            admittance = (complex(r / denominator, - x / denominator)
-                          + complex(gch / 2, bch / 2))
+            admittance = complex(r / denominator, - x / denominator)
+            shunt = complex(gch / 2, bch / 2)
 
             other_term_mrid = [t for t
                                in node_breaker.terminal_map[line_seg_mrid]
@@ -63,8 +63,8 @@ def calculate_admittance_matrix(node_breaker):
             other_node = connectivity_inv[other_term_mrid]
             j = nodes.index(other_node)
 
-            matrix[i][j] = admittance
-            matrix[j][i] = -admittance
+            matrix[i][j] = -admittance
+            matrix[i][i] += admittance + shunt
     return matrix
 
 
