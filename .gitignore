@@ -1,2 +1,3 @@
 __pycache__
-db
+db/cimrepodb.sql
+db/dump.sql

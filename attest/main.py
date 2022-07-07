@@ -1,6 +1,6 @@
 import click
 import attest.db
-import attest.processor
+import attest.unprocessed
 import attest.node_breaker
 import attest.node_branch
 import datetime
@@ -12,7 +12,7 @@ import sys
 def main(dbname):
     unprocessed = attest.unprocessed.UnprocessedModel()
     with attest.db.connect(dbname) as c:
-        unprocessed.load_data_structures(c, 4, 1, datetime.datetime.now())
+        unprocessed.load_data_structures(c, 4, 2, datetime.datetime.now())
 
     topological_nodes, connectivity_map = attest.node_breaker.merge_nodes(
         unprocessed)

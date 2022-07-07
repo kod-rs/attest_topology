@@ -1,11 +1,15 @@
 """Module in charge of database interactions"""
+from typing import Optional
 import click
 import contextlib
 import datetime
+import getpass
 import psycopg2
 import psycopg2.extras
 import sys
-from typing import Optional
+
+
+psycopg2.extras.register_uuid()
 
 
 class Connection:
@@ -15,8 +19,19 @@ class Connection:
     Args:
         dbname: database name"""
 
-    def __init__(self, dbname: str):
-        conn_string = f"dbname={dbname}"
+    def __init__(self,
+                 dbname: str,
+                 host: str = '127.0.0.1',
+                 port: int = 5432,
+                 user: Optional[str] = 'postgres',
+                 password: Optional[str] = None):
+        if password is None:
+            password = getpass.getpass(f'Password for Postgres user {user}: ')
+        conn_string = (f"host={host} "
+                       f"port={port} "
+                       f"password={password} "
+                       f"user={user} "
+                       f"dbname={dbname}")
         self._conn_string = conn_string
         self._connection = None
 
@@ -74,6 +89,29 @@ class Connection:
             (last_branch_id, last_commit_id, last_valid_time,
              cim_class_ids, hmrids, mrids, pmrids, rnamelikes))
         return self._cursor.fetchall()
+
+    def snapshot(self, branch_id: int, commit_id: int) -> dict[str, int]:
+        """Retrieves a CIM snapshot
+
+        Args:
+            branch_id: branch id
+            commit_id: commit id
+
+        Returns:
+            Mapping MRID -> state
+        """
+
+        self._cursor.execute(
+            "SELECT mrids, intvalues FROM repo.snapshot_t "
+            "WHERE branchid=%s AND commitid=%s",
+            (branch_id, commit_id))
+        data = self._cursor.fetchall()
+        if not data:
+            return {}
+        snapshot = {}
+        for mrid, value in zip(data[0]['mrids'], data[0]['intvalues']):
+            snapshot[str(mrid)] = value
+        return snapshot
 
     def get_classes(self) -> list:
         """Fetch all classes in the database

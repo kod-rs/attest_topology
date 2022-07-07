@@ -37,6 +37,7 @@ class UnprocessedModel:
                       'cim:Terminal')]
         records = connection.recordat(branch, commit, valid_time,
                                       cim_class_ids=class_ids)
+        snapshot = connection.snapshot(branch, commit)
 
         node_set = []
         asset_map = {}
@@ -44,21 +45,24 @@ class UnprocessedModel:
         terminal_map = {}
         connectivity_map = {}
         for record in records:
+            record['mrid'] = str(record['mrid'])
             record = dict(record, **record['fullobject'])
             del record['fullobject']
 
-            mrid = record['mrid']
+            mrid = str(record['mrid'])
             asset_map[mrid] = record
             if record['cimclass'] == 'cim:ConnectivityNode':
                 node_set.append(record)
             elif record['cimclass'] in ('cim:Breaker', 'cim:Disconnector'):
                 switch_map[mrid] = True  # TODO inject real data
+                if mrid in snapshot:
+                    print(snapshot.get(mrid))
             elif record['cimclass'] == 'cim:Terminal':
-                element_mrid = record['cim:Terminal.ConductingEquipment']
+                element_mrid = str(record['cim:Terminal.ConductingEquipment'])
                 terminal_map.setdefault(element_mrid, [])
                 terminal_map[element_mrid].append(mrid)
 
-                cn_mrid = record['cim:Terminal.ConnectivityNode']
+                cn_mrid = str(record['cim:Terminal.ConnectivityNode'])
                 connectivity_map.setdefault(cn_mrid, [])
                 connectivity_map[cn_mrid].append(mrid)
 
