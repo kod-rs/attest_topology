@@ -90,7 +90,9 @@ class Connection:
              cim_class_ids, hmrids, mrids, pmrids, rnamelikes))
         return self._cursor.fetchall()
 
-    def snapshot(self, branch_id: int, commit_id: int) -> dict[str, int]:
+    def snapshot(self,
+                 last_branch_id: Optional[int],
+                 last_commit_id: Optional[int]) -> dict[str, int]:
         """Retrieves a CIM snapshot
 
         Args:
@@ -101,16 +103,29 @@ class Connection:
             Mapping MRID -> state
         """
 
+        where_clause = ''
+        where_args = []
+        if last_branch_id:
+            where_clause += 'branchid <= %s '
+            where_args.append(last_branch_id)
+        if last_commit_id:
+            if where_clause:
+                where_clause += 'AND '
+            where_clause += 'commitid <= %s '
+            where_args.append(last_commit_id)
+        if where_clause:
+            where_clause = f"WHERE {where_clause}"
+
         self._cursor.execute(
-            "SELECT mrids, intvalues FROM repo.snapshot_t "
-            "WHERE branchid=%s AND commitid=%s",
-            (branch_id, commit_id))
+            f"SELECT mrids, intvalues FROM repo.snapshot_t {where_clause};",
+            where_args)
         data = self._cursor.fetchall()
         if not data:
             return {}
         snapshot = {}
-        for mrid, value in zip(data[0]['mrids'], data[0]['intvalues']):
-            snapshot[str(mrid)] = value
+        for row in data:
+            for mrid, value in zip(row['mrids'], row['intvalues']):
+                snapshot[str(mrid)] = value
         return snapshot
 
     def get_classes(self) -> list:
@@ -128,11 +143,19 @@ class Connection:
 
 
 @contextlib.contextmanager
-def connect(dbname: str):
+def connect(dbname: str,
+            host: str,
+            port: int,
+            user: Optional[str],
+            password: Optional[str]):
     """Context manager for a database connection
 
     Args:
-        dbname: database name"""
+        dbname: database name
+        host: database hostname
+        port: database port
+        user: database user
+        password: database password"""
     connection = Connection(dbname)
     connection.connect()
     yield connection

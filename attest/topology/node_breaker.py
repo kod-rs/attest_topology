@@ -1,6 +1,6 @@
 """Module containing the implementation for building the node-breaker model."""
-import attest.db
-import attest.unprocessed
+import attest.topology.db
+import attest.topology.unprocessed
 import click
 import datetime
 import sys
@@ -8,8 +8,10 @@ import sys
 
 class NodeBreakerModel:
 
-    def __init__(self, unprocessed, topological_nodes, connectivity_map):
+    def __init__(self, unprocessed):
         self._unprocessed = unprocessed
+
+        topological_nodes, connectivity_map = merge_nodes(unprocessed)
         self._topological_nodes = topological_nodes
         self._connectivity_map = connectivity_map
 

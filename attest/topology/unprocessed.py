@@ -1,11 +1,12 @@
 class UnprocessedModel:
 
-    def __init__(self):
+    def __init__(self, connection, branch, commit, valid_time):
         self._node_set = None
         self._asset_map = None
         self._switch_map = None
         self._terminal_map = None
         self._connectivity_map = None
+        self._load_data_structures(connection, branch, commit, valid_time)
 
     @property
     def node_set(self):
@@ -27,7 +28,7 @@ class UnprocessedModel:
     def connectivity_map(self):
         return self._connectivity_map
 
-    def load_data_structures(self, connection, branch, commit, valid_time):
+    def _load_data_structures(self, connection, branch, commit, valid_time):
         classes = connection.get_classes()
         classes = {row['cimclass']: row['cimclassid'] for row in classes}
         class_ids = [classes[name] for name in
@@ -37,7 +38,7 @@ class UnprocessedModel:
                       'cim:Terminal')]
         records = connection.recordat(branch, commit, valid_time,
                                       cim_class_ids=class_ids)
-        snapshot = connection.snapshot(branch, commit)
+        snapshot = connection.snapshot(None, None)
 
         node_set = []
         asset_map = {}

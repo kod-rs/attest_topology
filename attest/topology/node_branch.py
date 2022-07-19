@@ -1,6 +1,6 @@
-import attest.db
-import attest.node_breaker
-import attest.unprocessed
+import attest.topology.db
+import attest.topology.node_breaker
+import attest.topology.unprocessed
 import click
 import datetime
 import sys
@@ -8,8 +8,12 @@ import sys
 
 class NodeBranchModel:
 
-    def __init__(self, node_breaker, admittance_matrix):
+    def __init__(self, node_breaker):
         self._node_breaker = node_breaker
+        self._topological_nodes = _ordered_nodes(
+            node_breaker.topological_nodes)
+
+        admittance_matrix = calculate_admittance_matrix(node_breaker)
         self._admittance_matrix = admittance_matrix
 
     @property
@@ -18,7 +22,7 @@ class NodeBranchModel:
 
     @property
     def topological_nodes(self):
-        return self._node_breaker.topological_nodes
+        return self._topological_nodes
 
 
 def calculate_admittance_matrix(node_breaker):
@@ -29,7 +33,8 @@ def calculate_admittance_matrix(node_breaker):
 
     node_count = len(node_breaker.topological_nodes)
     matrix = [[0] * node_count for _ in range(node_count)]
-    nodes = list(node_breaker.topological_nodes.keys())
+    nodes = [node for node, _
+             in _ordered_nodes(node_breaker.topological_nodes)]
     processed_lines = set()
     for i, node_mrid in enumerate(nodes):
         for term_mrid in node_breaker.connectivity_map[node_mrid]:
@@ -66,6 +71,11 @@ def calculate_admittance_matrix(node_breaker):
             matrix[i][j] = -admittance
             matrix[i][i] += admittance + shunt
     return matrix
+
+
+def _ordered_nodes(topological_nodes):
+    return sorted([[node_mrid, elements]
+                   for node_mrid, elements in topological_nodes.items()])
 
 
 @click.command()
