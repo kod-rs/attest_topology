@@ -11,8 +11,11 @@ services:
         build: .
         volumes:
             - ./attest:/app/attest
+            - ./instance:/app/instance
         environment:
             FLASK_APP: attest.server
+            FLASK_ENV: development
+            DB_HOST: db
         command:
             ['flask', 'run', '--host=0.0.0.0']
     nginx:
