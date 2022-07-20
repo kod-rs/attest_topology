@@ -15,6 +15,7 @@ def create_app():
                                   user=app.config['DB_USER'],
                                   password=app.config['DB_PASSWORD'])
     conn.connect()
+    app.teardown_appcontext(lambda e: conn.disconnect)
 
     try:
         os.makedirs(app.instance_path)
