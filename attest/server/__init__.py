@@ -48,7 +48,6 @@ def create_app():
 
 
 def _sparse_entry(i, j, value):
-    value = complex(value)
     return {'row': i,
             'col': j,
             'value': [value.real, value.imag]}
