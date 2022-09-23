@@ -1,5 +1,5 @@
 import sys
-from attest.measurement_processor import processor
+from attest.estimator import processor
 
 
 if __name__ == '__main__':

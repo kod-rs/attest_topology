@@ -1,5 +1,4 @@
 __pycache__
-db/cimrepodb.sql
-db/dump.sql
+db
 estimator_data
 datasets
