@@ -76,57 +76,57 @@ required:
 properties:
     branch_id:
         type: int
-		description: CIM repo branch id
+        description: CIM repo branch id
     commit_id:
-		type: int
-		description: CIM repo commit id
+        type: int
+        description: CIM repo commit id
     datetime:
-		type: int
-		description: UNIX timestamp of the time when the snapshot was taken
+        type: int
+        description: UNIX timestamp of the time when the snapshot was taken
     admittance_sparse_matrix:
-		type: array
-		items:
-			type: object
-			description: |
-				Sparse matrix, represents connection between the topological
-				node at row and col, with the admittance value. Rows and cols
-				are indices of topological nodes under the topologlical_nodes
-				property.
-			required:
-				- row
-				- col
-				- value
-			properties:
-				row:
-					type: int
-				col:
-					type: int
-				value:
-					type: array
-					maxContains: 2
-					description: |
-						complex number, first value is the real and second is
-						the imaginary segment
-					items:
-						type: float
+        type: array
+        items:
+            type: object
+            description: |
+                Sparse matrix, represents connection between the topological
+                node at row and col, with the admittance value. Rows and cols
+                are indices of topological nodes under the topologlical_nodes
+                property.
+            required:
+                - row
+                - col
+                - value
+            properties:
+                row:
+                    type: int
+                col:
+                    type: int
+                value:
+                    type: array
+                    maxContains: 2
+                    description: |
+                        complex number, first value is the real and second is
+                        the imaginary segment
+                    items:
+                    type: float
     topological_nodes:
-		type: array
-		items:
-			type: array
-			maxContains: 2
-			description: |
-				pair of topological node UUID (first UUID in the group by
-				lexicographic order) and all element UUIDs belonging to that
-				node
-			prefixItems:
-			  - type: string
-				description: UUID, topological node id
-			  - type: array
-			    description: |
-					ids of all elements belonging to the topological node
-				items:
-					type: string
-					description: UUID
+        type: array
+        items:
+            type: array
+            maxContains: 2
+            description: |
+                pair of topological node UUID (first UUID in the group by
+                lexicographic order) and all element UUIDs belonging to that
+                node
+            prefixItems:
+              - type: string
+                description: UUID, topological node id
+              - type: array
+                description: |
+                    ids of all elements belonging to the topological node
+                items:
+                    type: string
+                    description: UUID
 ...
 ```
 
@@ -144,8 +144,8 @@ Response:
 	"commit_id": 1,
 	"timestamp": 1664181352,
 	"admittance_sparse_matrix": [
-		{"row": 0, "col": 1, value: [1.1, 2.2]},
-		{"row": 3, "col": 4, value: [5.3, 7.1]},
+		{"row": 0, "col": 1, "value": [1.1, 2.2]},
+		{"row": 3, "col": 4, "value": [5.3, 7.1]},
 	],
 	"topological_nodes": [
 		["c134850a-3d76-11ed-b16f-201e88d11df2", [
