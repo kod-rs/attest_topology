@@ -197,7 +197,57 @@ day of week, time when estimation is assessed, etc.
 Estimator is implemented as a command line program. It has the following
 interface:
 
-`call pyhton -m attest.estimator --help`
+```
+Usage: python -m attest.estimator [OPTIONS]
+
+  Based on given readings and network topology, attempts to approximate
+  physical states of all topological nodes in the network. Writes to the
+  output path a CSV table containing the following columns:
+
+      * vm_pu - voltage amount, expressed as a percentage of bus' voltage
+      level
+
+      * va_degree - voltage angle in radians
+
+      * p_mw - active power on the bus
+
+      * q_mvar - reactive power on the bus
+
+  Table rows represent a single bus, ordered in the same way buses are ordered
+  in the case file.
+
+Options:
+  --matpower-path PATH  MATPOWER case file (.mat) path
+  --readings-path PATH  Readings configuration file path. Requires CSV with
+                        columns:
+
+                        * meas_type - v (voltage), p (active power), q
+                        (reactive power), i (current), va (voltage angle), or
+                        ia (current angle)
+
+                        * element_type - bus, line, trafo, or trafo3w (three-
+                        way trafo)
+
+                        * value - measurement amount - MW for p, MVar for q, 0
+                        to 1 for voltage (percentage of bus' voltage level),
+                        kA for i, and radians for angles
+
+                        * std_dev - measuring device standard deviation
+
+                        * element - element ID in the given casefile (0-based
+                        index of bus, line or trafo)
+
+                        * side - if element is line, from or to, if trafo hv,
+                        mv, or lv - represents the element segment to which
+                        the measurement refers to. For other types of elements
+                        can be set to null
+  --output-path PATH    Output CSV file path
+  --models-path PATH    Path to persisted pseudomeasurement generation models.
+                        Point to a directory with files `p.pickle` and
+                        `q.pickle`. Optional, if unset, internal models are
+                        used.
+  --help                Show this message and exit.
+```
 
 For more information on measurement input CSV, consult the [estimator
 documentation](https://pandapower.readthedocs.io/en/v2.6.0/elements/measurement.html#pandapower.create_measurement),
