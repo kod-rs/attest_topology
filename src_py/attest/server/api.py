@@ -1,15 +1,16 @@
 import datetime
 from flask import request
 
-from attest import topology
+import attest.topology.db
+import attest.topology.unprocessed
 
 
 def create(app, prefix):
-    conn = topology.db.Connection(dbname=app.config['DB_NAME'],
-                                  host=app.config['DB_HOST'],
-                                  port=app.config['DB_PORT'],
-                                  user=app.config['DB_USER'],
-                                  password=app.config['DB_PASSWORD'])
+    conn = attest.topology.db.Connection(dbname=app.config['DB_NAME'],
+                                         host=app.config['DB_HOST'],
+                                         port=app.config['DB_PORT'],
+                                         user=app.config['DB_USER'],
+                                         password=app.config['DB_PASSWORD'])
     conn.connect()
     app.teardown_appcontext(lambda e: conn.disconnect)
 
@@ -19,10 +20,11 @@ def create(app, prefix):
         commit_id = _querystring_optional_int('commit_id')
         timestamp = datetime.datetime.now(tz=datetime.timezone.utc)
 
-        unprocessed = topology.unprocessed.UnprocessedModel(
+        unprocessed = attest.topology.unprocessed.UnprocessedModel(
             conn, branch_id, commit_id, timestamp)
-        node_breaker = topology.node_breaker.NodeBreakerModel(unprocessed)
-        node_branch = topology.node_branch.NodeBranchModel(node_breaker)
+        node_breaker = attest.topology.node_breaker.NodeBreakerModel(
+            unprocessed)
+        node_branch = attest.topology.node_branch.NodeBranchModel(node_breaker)
 
         admittance_sparse = []
         for i, row in enumerate(node_branch.admittance_matrix):
