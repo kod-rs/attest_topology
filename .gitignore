@@ -1,5 +1,8 @@
 __pycache__
-db
+src_db/cimrepodb.sql
+src_db/dump.sql
 estimator_data
 datasets
 examples/output.csv
+.doit.db
+build

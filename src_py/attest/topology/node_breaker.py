@@ -8,35 +8,47 @@ import sys
 
 class NodeBreakerModel:
 
-    def __init__(self, unprocessed):
+    """Node-breaker model based on the given unprocessed model. Starts
+    processing upon initialization
+
+    Args:
+        unprocessed: unprocessed model"""
+
+    def __init__(self,
+                 unprocessed: attest.topology.unprocessed.UnprocessedModel):
         self._unprocessed = unprocessed
 
-        topological_nodes, connectivity_map = merge_nodes(unprocessed)
+        topological_nodes, connectivity_map = _merge_nodes(unprocessed)
         self._topological_nodes = topological_nodes
         self._connectivity_map = connectivity_map
 
     @property
     def topological_nodes(self):
+        """Topological nodes"""
         return self._topological_nodes
 
     @property
     def connectivity_map(self):
+        """Connectivity map"""
         return self._connectivity_map
 
     @property
     def terminal_map(self):
+        """Terminal map"""
         return self._unprocessed.terminal_map
 
     @property
     def asset_map(self):
+        """Asset map"""
         return self._unprocessed.asset_map
 
     @property
     def switch_map(self):
+        """Switch map"""
         return self._unprocessed.switch_map
 
 
-def merge_nodes(unprocessed):
+def _merge_nodes(unprocessed):
     connectivity_map = {mrid: list(terminals) for mrid, terminals
                         in unprocessed.connectivity_map.items()}
     merge_map = {node['mrid']: node['mrid'] for node in unprocessed.node_set}
@@ -92,7 +104,7 @@ def main(dbname):
     model = attest.unprocessed.UnprocessedModel()
     with attest.db.connect(dbname) as c:
         model.load_data_structures(c, 4, 1, datetime.datetime.now())
-    topological_nodes, connectivity_map = merge_nodes(model)
+    topological_nodes, connectivity_map = _merge_nodes(model)
     print(topological_nodes)
 
 

@@ -1,6 +1,26 @@
+from datetime import datetime
+import typing
+
+from attest.topology import db
+
+
 class UnprocessedModel:
 
-    def __init__(self, connection, branch, commit, valid_time):
+    """Model containing initial data structures - node set, asset map, switch
+    map, terminal map, and connectivity map. Loads the structures upon
+    initialization.
+
+    Args:
+        connection: reference to the topology database connection object
+        branch: CIM branch id - if None, latest is used
+        commit: CIM commit id - if None, latest is used
+        valid_time: system snapshot time - if None, latest is used"""
+
+    def __init__(self,
+                 connection: db.Connection,
+                 branch: typing.Optional[int],
+                 commit: typing.Optional[int],
+                 valid_time: typing.Optional[datetime]):
         self._node_set = None
         self._asset_map = None
         self._switch_map = None
@@ -10,22 +30,28 @@ class UnprocessedModel:
 
     @property
     def node_set(self):
+        """Node set"""
         return self._node_set
 
     @property
     def asset_map(self):
+        """Asset map"""
         return self._asset_map
 
     @property
     def switch_map(self):
+        """Switch map"""
         return self._switch_map
 
     @property
     def terminal_map(self):
+        """Terminal map"""
+        return self._switch_map
         return self._terminal_map
 
     @property
     def connectivity_map(self):
+        """Connectivity map"""
         return self._connectivity_map
 
     def _load_data_structures(self, connection, branch, commit, valid_time):

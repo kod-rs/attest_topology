@@ -17,7 +17,11 @@ class Connection:
     """Represents a connection to the database
 
     Args:
-        dbname: database name"""
+        dbname: database name
+        host: database host
+        port: database port
+        user: database user
+        password: database password, if ``None`` requires input"""
 
     def __init__(self,
                  dbname: str,

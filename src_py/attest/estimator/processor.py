@@ -9,8 +9,7 @@ import sys
 import attest.estimator.generator
 
 
-logging.basicConfig(stream=sys.stdout,
-                    level='INFO')
+logging.basicConfig(stream=sys.stdout, level='INFO')
 
 mlog = logging.getLogger('attest.estimator.processor')
 

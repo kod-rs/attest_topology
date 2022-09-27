@@ -8,24 +8,32 @@ import sys
 
 class NodeBranchModel:
 
+    """Node-branch model based on the given node-breaker model. Starts
+    processing upon initialziation
+
+    Args:
+        node_breaker: node-breaker model"""
+
     def __init__(self, node_breaker):
         self._node_breaker = node_breaker
         self._topological_nodes = _ordered_nodes(
             node_breaker.topological_nodes)
 
-        admittance_matrix = calculate_admittance_matrix(node_breaker)
+        admittance_matrix = _calculate_admittance_matrix(node_breaker)
         self._admittance_matrix = admittance_matrix
 
     @property
     def admittance_matrix(self):
+        """Model admittance matrix"""
         return self._admittance_matrix
 
     @property
     def topological_nodes(self):
+        """Topological nodes"""
         return self._topological_nodes
 
 
-def calculate_admittance_matrix(node_breaker):
+def _calculate_admittance_matrix(node_breaker):
     connectivity_inv = {}
     for k, terminals in node_breaker.connectivity_map.items():
         for terminal in terminals:
@@ -90,7 +98,7 @@ def main(dbname):
     node_breaker = attest.node_breaker.NodeBreakerModel(
         unprocessed, topological_nodes, connectivity_map)
 
-    print(calculate_admittance_matrix(node_breaker))
+    print(_calculate_admittance_matrix(node_breaker))
 
 
 if __name__ == '__main__':

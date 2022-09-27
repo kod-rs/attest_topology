@@ -10,9 +10,9 @@ services:
             - db
         build: .
         volumes:
-            - ./attest:/app/attest
-            - ./instance:/app/instance
+            - ./src_py:/app/src_py
         environment:
+            PYTHONPATH: /app/src_py
             FLASK_APP: attest.server
             FLASK_ENV: development
             DB_HOST: db
