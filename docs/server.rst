@@ -94,14 +94,14 @@ Response:
         "commit_id": 1,
         "timestamp": 1664181352,
         "admittance_sparse_matrix": [
-            {"row": 0, "col": 0, "value": [-1.1, -2.2]},
-            {"row": 0, "col": 1, "value": [1.1, 2.2]},
-            {"row": 1, "col": 1, "value": [-1.1, -2.2]},
-            {"row": 1, "col": 0, "value": [1.1, 2.2]},
-            {"row": 3, "col": 3, "value": [-5.3, -7.1]},
-            {"row": 3, "col": 4, "value": [5.3, 7.1]},
-            {"row": 4, "col": 3, "value": [5.3, 7.1]},
-            {"row": 4, "col": 4, "value": [-5.3, -7.1]},
+            {"row": 0, "col": 0, "value": [1.1, 2.2]},
+            {"row": 0, "col": 1, "value": [-1.1, -2.2]},
+            {"row": 1, "col": 0, "value": [-1.1, -2.2]},
+            {"row": 1, "col": 1, "value": [1.1, 2.2]},
+            {"row": 3, "col": 3, "value": [5.3, 7.1]},
+            {"row": 3, "col": 4, "value": [-5.3, -7.1]},
+            {"row": 4, "col": 3, "value": [-5.3, -7.1]},
+            {"row": 4, "col": 4, "value": [5.3, 7.1]},
         ],
         "topological_nodes": [
             ["c134850a-3d76-11ed-b16f-201e88d11df2", [
@@ -120,11 +120,11 @@ Response:
 
 This could be interpreted as the following admittance matrix::
 
-    -1.1 - 2.2j 1.1 + 2.2j  0          0           0
     1.1 + 2.2j  -1.1 - 2.2j 0          0           0
+    -1.1 - 2.2j 1.1 + 2.2j  0          0           0
     0           0           0          0           0
-    0           0           0          -5.3 - 7.1j 5.3 + 7.1j
     0           0           0          5.3 + 7.1j  -5.3 - 7.1j
+    0           0           0          -5.3 - 7.1j 5.3 + 7.1j
 
 Furhtermore, adding the ``topological_nodes`` interpretation we can see that
 the node ``c134850a-3d76-11ed-b16f-201e88d11df2`` and
