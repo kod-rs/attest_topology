@@ -42,3 +42,9 @@ def task_docs():
                                         'sphinx.ext.napoleon',
                                         'sphinxcontrib.programoutput',
                                         'sphinx_mdinclude']}})]}
+
+
+def task_build_server():
+    """Build server additional files"""
+    return {'actions': [
+        'rst2html docs/server.rst src_py/attest/server/index.html']}

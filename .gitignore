@@ -6,3 +6,4 @@ datasets
 examples/output.csv
 .doit.db
 build
+src_py/attest/server/index.html
