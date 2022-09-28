@@ -111,11 +111,22 @@ def _network_reset(network):
     network = pandapower.create_empty_network()
     network.bus = network_old.bus
     network.line = network_old.line
-    network.trafo = network_old.trafo
-    network.ext_grid = network_old.ext_grid
-    network.sgen = network_old.sgen
+    network.switch = network_old.switch
     network.load = network_old.load
+    network.motor = network_old.motor
+    network.asymmetric_load = network_old.asymmetric_load
+    network.sgen = network_old.sgen
+    network.ext_grid = network_old.ext_grid
+    network.trafo = network_old.trafo
+    network.trafo3w = network_old.trafo3w
+    network.gen = network_old.gen
+    network.shunt = network_old.shunt
+    network.impedance = network_old.impedance
+    network.ward = network_old.ward
+    network.xward = network_old.xward
+    network.dcline = network_old.dcline
     network.measurement = network_old.measurement
+    network.storage = network_old.storage
     return network
 
 
