@@ -1,7 +1,7 @@
-# ATTEST
+# ATTEST T4.4 Tools
 
-Repository containing various tools used in the ATTEST project. To set
-everything up, Python requirements need to be installed:
+Repository containing various tools used in the ATTEST project. 
+To set everything up, Python requirements need to be installed:
 
 ```bash
 pip install -r requirements.txt
